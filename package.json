@@ -1,0 +1,26 @@
+{
+  "name": "to-do-app",
+  "version": "1.0.0",
+  "description": "TO DO app By Omar",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omargabrsw/to-do-app.git"
+  },
+  "keywords": [
+    "todo"
+  ],
+  "author": "Omar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omargabrsw/to-do-app/issues"
+  },
+  "homepage": "https://github.com/omargabrsw/to-do-app#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
