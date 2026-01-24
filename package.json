@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/omargabrsw/to-do-app#readme",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "mysql": "^2.18.1"
   }
 }
