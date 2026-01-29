@@ -29,11 +29,11 @@ async function getTasks() {
     });
   });
 }
-let tasks = await getTasks();
 
-server.on('request', (req, res) => {
+server.on('request', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   if (req.method === 'GET' && req.url === '/api/tasks') {
+    let tasks = await getTasks();
     res.writeHead(200, 'The API is working now bruv');
     res.end(JSON.stringify(tasks));
   } else {
