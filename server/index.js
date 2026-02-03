@@ -1,9 +1,9 @@
 // dotenv Import
-import 'dotenv/config';
+import "dotenv/config";
 // mysql import
-import mysql from 'mysql';
+import mysql from "mysql";
 // HTTP NodeJS Module import
-import * as http from 'node:http';
+import * as http from "node:http";
 // Make Web Server
 const server = http.createServer();
 // Make Database Connection
@@ -13,11 +13,10 @@ const connection = mysql.createConnection({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
 });
-
-// Make DB Connection
+connection.connect();
 
 async function getTasks() {
-  const query = 'select * from tasks';
+  const query = "select * from tasks";
 
   return new Promise((res, rej) => {
     connection.query(query, (error, results) => {
@@ -29,16 +28,15 @@ async function getTasks() {
     });
   });
 }
-
-server.on('request', async (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (req.method === 'GET' && req.url === '/api/tasks') {
+server.on("request", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  if (req.method === "GET" && req.url === "/api/tasks") {
     let tasks = await getTasks();
-    res.writeHead(200, 'The API is working now bruv');
+    res.statusCode = 200;
+    res.statusMessage = "Code working bro don't worry trust the chad";
     res.end(JSON.stringify(tasks));
   } else {
-    res.writeHead(404, 'Not Found');
+    res.writeHead(404, "Not Found");
   }
 });
-
-server.listen(8000, '127.0.0.1');
+server.listen(8000, "127.0.0.1");
