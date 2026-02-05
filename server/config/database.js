@@ -1,6 +1,8 @@
 // dotenv Import
 
-import "dotenv/config";
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./server/.env" });
 
 // mysql Module Import
 
