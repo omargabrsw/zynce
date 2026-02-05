@@ -7,13 +7,12 @@ import * as http from "node:http";
 // Make Web Server
 const server = http.createServer();
 // Make Database Connection
-const connection = mysql.createConnection({
+const connection = mysql.createPoolCluster({
   host: process.env.DATABASE_HOST,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
 });
-connection.connect();
 
 async function getTasks() {
   const query = "select * from tasks";
