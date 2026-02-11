@@ -23,7 +23,7 @@ export async function getTasks(req, res) {
       console.log('Error Happend Try Again');
     }
   });
-
+res.setHeader("Access-Control-Allow-Origin", "*");
   res.statusCode = 200;
 
   res.statusMessage = "Code working bro don't worry trust the chad";

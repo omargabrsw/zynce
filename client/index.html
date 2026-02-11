@@ -1,13 +1,44 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My To Do App</title>
-    <meta
-      name="description"
-      content="A TO DO APP using nodejs as backend and MySql as DB trying to build an API and understanding more about it and try to mimic the real world way of working"
-    />
-  </head>
-  <body></body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My To Do App</title>
+  <meta name="description"
+    content="A TO DO APP using nodejs as backend and MySql as DB trying to build an API and understanding more about it and try to mimic the real world way of working" />
+</head>
+
+<body>
+
+  <main>
+    <section>
+      <h1>Your TODOS</h1>
+      <div id="app" class="todo-section">
+
+        <script src="src/app.js" type="module"></script>
+
+      </div>
+    </section>
+  </main>
+  <script id="__bs_script__">//<![CDATA[
+  (function() {
+    try {
+      var script = document.createElement('script');
+      if ('async') {
+        script.async = true;
+      }
+      script.src = 'http://HOST:3000/browser-sync/browser-sync-client.js?v=3.0.4'.replace("HOST", location.hostname);
+      if (document.body) {
+        document.body.appendChild(script);
+      } else if (document.head) {
+        document.head.appendChild(script);
+      }
+    } catch (e) {
+      console.error("Browsersync: could not append script tag", e);
+    }
+  })()
+//]]></script>
+</body>
+
 </html>
