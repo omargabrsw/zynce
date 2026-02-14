@@ -23,39 +23,57 @@ export class TaskController {
     response.statusMessage = "Code working bro don't worry trust the chad";
     response.end(JSON.stringify(tasks));
   }
+
   // Create and Store task
   async createTask(request, response) {
-    const query = `INSERT INTO tasks (task_name, task_description, status)
-      VALUES (?, ?, ?)`;
-    let task = await new Promise((resolve, reject) => {
-      let chunks = "";
-      request.on("data", (chunk) => {
-        chunks += chunk.toString();
-      });
-      request.on("end", () => {
-        resolve(JSON.parse(chunks));
-      });
-      request.on("error", (err) => reject(err));
-    });
-    const results = await new Promise((resolve, reject) => {
-      connection.query(
-        query,
-        [task.name, task.desc, task.status],
-        (err, results) => {
-          if (err) {
-            return reject(err);
+    try {
+      const query = `
+      INSERT INTO tasks (task_name, task_description, status)
+      VALUES (?, ?, ?)
+    `;
+
+      const task = await new Promise((resolve, reject) => {
+        let chunks = "";
+
+        request.on("data", (chunk) => {
+          chunks += chunk.toString();
+        });
+
+        request.on("end", () => {
+          try {
+            resolve(JSON.parse(chunks));
+          } catch (err) {
+            reject(err);
           }
-          resolve(results.insertId);
-        },
+        });
+
+        request.on("error", (err) => reject(err));
+      });
+
+      const insertId = await new Promise((resolve, reject) => {
+        connection.query(
+          query,
+          [task.name, task.desc, task.status],
+          (err, results) => {
+            if (err) return reject(err);
+            resolve(results.insertId);
+          },
+        );
+      });
+
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.statusCode = 201;
+      response.message = "Task Made Btuv";
+      response.end(JSON.stringify({ id: insertId }));
+    } catch (error) {
+      console.error("Create Task Error:", error);
+
+      response.statusCode = 500;
+      response.end(
+        JSON.stringify({
+          message: "Something went wrong",
+        }),
       );
-    });
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.statusCode = 201;
-    response.statusMessage = "Task Added bruv";
-    response.end(
-      JSON.stringify({
-        id: results.insertId,
-      }),
-    );
+    }
   }
 }
