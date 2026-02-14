@@ -3,35 +3,42 @@ import { connection } from "../config/database.js";
 
 export class TaskController {
   // Fetches All Tasks from DB
+
   async getTasks(request, response) {
     const query = "select * from tasks";
-    const tasks = await new Promise((resolve, reject) => {
-      try {
+
+    try {
+      const tasks = await new Promise((resolve, reject) => {
         connection.query(query, (error, results) => {
-          if (error) {
-            console.log(error);
-            return reject(error);
-          }
-          return resolve(results);
+          if (error) return reject(error);
+          resolve(results);
         });
-      } catch (err) {
-        console.log("Error Happend Try Again");
-      }
-    });
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.statusCode = 200;
-    response.statusMessage = "Code working bro don't worry trust the chad";
-    response.end(JSON.stringify(tasks));
+      });
+
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.statusCode = 200;
+      response.statusMessage = "Code working bro don't worry trust the chad";
+      response.end(JSON.stringify(tasks));
+    } catch (err) {
+      console.error("Get Tasks Error:", err);
+
+      response.statusCode = 500;
+      response.end(
+        JSON.stringify({
+          message: "Failed to fetch tasks",
+        }),
+      );
+    }
   }
 
   // Create and Store task
   async createTask(request, response) {
-    try {
-      const query = `
+    const query = `
       INSERT INTO tasks (task_name, task_description, status)
       VALUES (?, ?, ?)
     `;
 
+    try {
       const task = await new Promise((resolve, reject) => {
         let chunks = "";
 
