@@ -1,11 +1,14 @@
 //Import taskController
-import { getTasks } from "../controllers/taskController.js";
+import { TaskController } from "../controllers/taskController.js";
+const taskController = new TaskController();
 
 export function handleRoutes(req, res) {
   //Get Tasks
   if (req.method === "GET" && req.url === "/api/tasks") {
-    return getTasks(req, res);
+    return taskController.getTasks(req, res);
   }
-
-  res.writeHead(404, "Not Found");
+  //Create Task
+  if (reg.method === "POST" && reg.url === "/api/tasks") {
+    return taskController.createTask();
+  }
 }
