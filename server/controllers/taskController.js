@@ -1,6 +1,8 @@
 // Import Database Connection
 import { connection } from "../config/database.js";
 
+// TODO: Add Delete task bruv
+
 export class TaskController {
   // Fetches All Tasks from DB
 
@@ -28,6 +30,21 @@ export class TaskController {
           message: "Failed to fetch tasks",
         }),
       );
+    }
+  }
+
+  async deleteTask(request, response) {
+    const query = "DELETE FROM tasks WHERE id = ?";
+    try {
+      const affectedRows = await new Promise((resolve, reject) => {
+        connection.query(query, [request.params.id], (error, results) => {
+          if (error) return reject(error);
+          resolve(results);
+        });
+      });
+      return affectedRows;
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -70,7 +87,7 @@ export class TaskController {
 
       response.setHeader("Access-Control-Allow-Origin", "*");
       response.statusCode = 201;
-      response.message = "Task Made Btuv";
+      response.message = "Task Made Bruv";
       response.end(JSON.stringify({ id: insertId }));
     } catch (error) {
       console.error("Create Task Error:", error);

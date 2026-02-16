@@ -2,13 +2,17 @@
 import { TaskController } from "../controllers/taskController.js";
 const taskController = new TaskController();
 
-export function handleRoutes(req, res) {
+export function handleRoutes(request, response) {
   //Get Tasks
-  if (req.method === "GET" && req.url === "/api/tasks") {
-    return taskController.getTasks(req, res);
+  if (request.method === "GET" && request.url === "/api/tasks") {
+    return taskController.getTasks(request, response);
   }
   //Create Task
-  if (reg.method === "POST" && reg.url === "/api/tasks") {
-    return taskController.createTask();
+  if (request.method === "POST" && request.url === "/api/tasks") {
+    return taskController.createTask(request, response);
+  }
+  //Delete Task
+  if (request.method === "DELETE" && request.url === "/api/tasks") {
+    return taskController.deleteTask(request, response);
   }
 }
