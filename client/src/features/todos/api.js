@@ -1,4 +1,5 @@
 import { Task } from "./class-task.js";
+
 export async function fetchTasks() {
   try {
     const response = await fetch("http://localhost:8000/api/tasks");

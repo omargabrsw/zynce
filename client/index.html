@@ -3,16 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My To Do App</title>
+    <title>Zynce</title>
     <meta
       name="description"
       content="A TO DO APP using nodejs as backend and MySql as DB trying to build an API and understanding more about it and try to mimic the real world way of working"
     />
     <link rel="stylesheet" href="./assets/css/global.css" />
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
     <main>
+      <aside id="sidebar">
+        <div class="sidebar-content">
+          <a href="/" class="nav-item">
+            <img id="Logo" src="assets/media/Zynce logo.svg" alt="Zynce Logo" />
+          </a>
+          <a class="nav-item">
+            <span class="nav-item-icon material-symbols-outlined"
+              >checklist</span
+            >
+          </a>
+          <a class="nav-item">
+            <span class="nav-item-icon material-symbols-outlined">chat</span>
+          </a>
+        </div>
+        <!-- <a class="nav-item"> -->
+        <!--   <span class="nav-item-icon"></span> -->
+        <!-- </a> -->
+        <!-- <a class="nav-item"> -->
+        <!--   <span class="nav-item-icon"></span> -->
+        <!-- </a> -->
+      </aside>
       <section>
         <h1>Your TODOS</h1>
         <div id="app" class="todo-section">

@@ -1,111 +1,70 @@
 // Import Database Connection
 import { connection } from "../config/database.js";
 
+import {
+  proccessBody,
+  queryDatabase,
+  sendServerError,
+} from "../utils/api-utils.js";
+
 export class TaskController {
-  // Fetches All Tasks from DB
-  async proccessBody(request) {
-    try {
-      const task = await new Promise((resolve, reject) => {
-        let data = "";
-
-        request.on("data", (chunk) => {
-          data += chunk.toString();
-        });
-
-        request.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (err) {
-            reject(err);
-          }
-        });
-
-        request.on("error", (err) => reject(err));
-      });
-      return task;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async getTasks(request, response) {
-    const query = "select * from tasks";
-
-    try {
-      const tasks = await new Promise((resolve, reject) => {
-        connection.query(query, (error, results) => {
-          if (error) return reject(error);
-          resolve(results);
-        });
-      });
-
-      response.setHeader("Access-Control-Allow-Origin", "*");
-      response.statusCode = 200;
-      response.statusMessage = "Code working bro don't worry trust the chad";
-      response.end(JSON.stringify(tasks));
-    } catch (err) {
-      console.error("Get Tasks Error:", err);
-
-      response.statusCode = 500;
-      response.end(
-        JSON.stringify({
-          message: "Failed to fetch tasks",
-        }),
-      );
-    }
-  }
-
-  async deleteTask(request, response) {
-    const query = "DELETE FROM tasks WHERE task_id = ?";
-    try {
-      const task = await this.proccessBody(request);
-
-      connection.query(query, [task.taskId], (error) => {
-        if (error) console.log(error);
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.statusCode = 204;
-        response.end();
-      });
-    } catch (err) {
-      console.error(err);
-      response.statusCode = 500;
-      response.end();
-    }
-  }
-
-  // Create and Store task
   async createTask(request, response) {
     const query = `
       INSERT INTO tasks (task_name, task_description, status)
       VALUES (?, ?, ?)
     `;
-    const task = await this.proccessBody(request);
+
+    const task = await proccessBody(request);
     try {
-      const insertId = await new Promise((resolve, reject) => {
-        connection.query(
-          query,
-          [task.name, task.desc, task.status],
-          (err, results) => {
-            if (err) return reject(err);
-            resolve(results.insertId);
-          },
-        );
-      });
+      const insertId = queryDatabase(connection, query, [
+        task.name,
+        task.desc,
+        task.status,
+      ]);
 
       response.setHeader("Access-Control-Allow-Origin", "*");
       response.statusCode = 201;
-      response.message = "Task Made Bruv";
       response.end(JSON.stringify({ id: insertId }));
-    } catch (error) {
-      console.error("Create Task Error:", error);
+    } catch (err) {
+      sendServerError(response, err);
+    }
+  }
 
-      response.statusCode = 500;
-      response.end(
-        JSON.stringify({
-          message: "Something went wrong",
-        }),
-      );
+  // Fetches All Tasks from DB
+  async getTasks(request, response) {
+    const query = "select * from tasks";
+
+    try {
+      const tasks = queryDatabase(connection, query);
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.statusCode = 200;
+      response.end(JSON.stringify(tasks));
+    } catch (err) {
+      sendServerError(response, err);
+    }
+  }
+
+  // Edit Task
+  async editTask(request, response) {
+    try {
+      proccessBody(request);
+    } catch (err) {
+      sendServerError(response, err);
+    }
+  }
+
+  // Delete Task
+  async deleteTask(request, response) {
+    const query = "DELETE FROM tasks WHERE task_id = ?";
+    try {
+      const task = await proccessBody(request);
+      queryDatabase(connection, query, [task.id]);
+
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.statusCode = 204;
+      response.end();
+    } catch (err) {
+      sendServerError(response, err);
     }
   }
 }

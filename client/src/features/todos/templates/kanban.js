@@ -47,18 +47,9 @@ function renderGrid(tasks) {
     const tasksContainer = document.createElement("div");
     tasksContainer.classList.add("column-tasks");
 
-    // Add task button container
-    const addTaskContainer = document.createElement("div");
-    addTaskContainer.classList.add("column-add");
-
-    const addButton = document.createElement("button");
-    addButton.textContent = "+ Add Task";
-    addTaskContainer.appendChild(addButton);
-
     // Assemble column
     statusColumn.appendChild(header);
     statusColumn.appendChild(tasksContainer);
-    statusColumn.appendChild(addTaskContainer);
 
     grid.appendChild(statusColumn);
   });
