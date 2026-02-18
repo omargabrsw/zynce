@@ -1,30 +1,27 @@
 // Import Database Connection
-import { connection } from "../config/database.js";
 
-import {
-  proccessBody,
-  queryDatabase,
-  sendServerError,
-} from "../utils/api-utils.js";
+import { connection } from "../config/database.js";
+import { queryDatabase } from "../utils/database-utils.js";
+import { proccessBody } from "../utils/api-utils.js";
+import { sendServerError, setCorsHeaders } from "../helper/http-helper.js";
 
 export class TaskController {
   async createTask(request, response) {
-    const query = `
+    try {
+      const query = `
       INSERT INTO tasks (task_name, task_description, status)
       VALUES (?, ?, ?)
     `;
 
-    const task = await proccessBody(request);
-    try {
-      const insertId = queryDatabase(connection, query, [
+      const task = await proccessBody(request);
+      const results = await queryDatabase(connection, query, [
         task.name,
         task.desc,
         task.status,
       ]);
-
-      response.setHeader("Access-Control-Allow-Origin", "*");
+      setCorsHeaders(response);
       response.statusCode = 201;
-      response.end(JSON.stringify({ id: insertId }));
+      response.end(JSON.stringify({ id: results.insertId }));
     } catch (err) {
       sendServerError(response, err);
     }
@@ -32,11 +29,11 @@ export class TaskController {
 
   // Fetches All Tasks from DB
   async getTasks(request, response) {
-    const query = "select * from tasks";
-
     try {
-      const tasks = queryDatabase(connection, query);
-      response.setHeader("Access-Control-Allow-Origin", "*");
+      const query = "select * from tasks";
+
+      const tasks = await queryDatabase(connection, query);
+      setCorsHeaders(response);
       response.statusCode = 200;
       response.end(JSON.stringify(tasks));
     } catch (err) {
@@ -47,7 +44,9 @@ export class TaskController {
   // Edit Task
   async editTask(request, response) {
     try {
-      proccessBody(request);
+      const task = await proccessBody(request);
+
+      setCorsHeaders(response);
     } catch (err) {
       sendServerError(response, err);
     }
@@ -55,12 +54,12 @@ export class TaskController {
 
   // Delete Task
   async deleteTask(request, response) {
-    const query = "DELETE FROM tasks WHERE task_id = ?";
     try {
+      const query = "DELETE FROM tasks WHERE task_id = ?";
       const task = await proccessBody(request);
       queryDatabase(connection, query, [task.id]);
 
-      response.setHeader("Access-Control-Allow-Origin", "*");
+      setCorsHeaders(response);
       response.statusCode = 204;
       response.end();
     } catch (err) {

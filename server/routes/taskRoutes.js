@@ -19,6 +19,7 @@ export function handleRoutes(request, response) {
   if (request.method === "DELETE" && request.url === "/api/tasks") {
     return taskController.deleteTask(request, response);
   }
+
   response.writeHead(404, { "Content-Type": "application/json" });
   response.end();
   return;
