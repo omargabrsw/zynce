@@ -3,6 +3,7 @@
  * @param {import('http').ServerResponse} response
  * @param {Error} [err]
  */
+
 export function sendServerError(response, err) {
   if (err) console.error(err);
   response.statusCode = 500;
@@ -14,6 +15,7 @@ export function sendServerError(response, err) {
  * Sets standard CORS headers on the response.
  * @param {import('http').ServerResponse} response
  */
+
 export function setCorsHeaders(response) {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader(

@@ -55,6 +55,7 @@
 body {
   font-family: "JetBrains Mono", monospace;
   background: var(--bg-main);
+  background-color: #37353E;
 }
 
 /* Layout */
@@ -87,7 +88,7 @@ h1 {
 #sidebar {
   height: 100vh;
   width: 80px;
-  background-color: var(--bg-sidebar);
+  background-color: #715A5A;
   position: fixed;
   top: 0;
   left: 0;

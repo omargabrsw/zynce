@@ -6,27 +6,23 @@
  * @throws Will reject if the request emits an error or if the body is not valid JSON.
  */
 
-export async function proccessBody(request) {
-  try {
-    const task = await new Promise((resolve, reject) => {
-      let data = "";
+export function proccessBody(request) {
+  return new Promise((resolve, reject) => {
+    let data = "";
 
-      request.on("data", (chunk) => {
-        data += chunk.toString();
-      });
-
-      request.on("end", () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (err) {
-          reject(err);
-        }
-      });
-
-      request.on("error", (err) => reject(err));
+    request.on("data", (chunk) => {
+      data += chunk.toString();
     });
-    return task;
-  } catch (err) {
-    console.log(err);
-  }
+
+    request.on("end", () => {
+      try {
+        if (data === "") return resolve({});
+        resolve(JSON.parse(data));
+      } catch (err) {
+        reject(err);
+      }
+    });
+
+    request.on("error", (err) => reject(err));
+  });
 }

@@ -3,67 +3,56 @@
 import { connection } from "../config/database.js";
 import { queryDatabase } from "../utils/database-utils.js";
 import { proccessBody } from "../utils/api-utils.js";
-import { sendServerError, setCorsHeaders } from "../helper/http-helper.js";
 
 export class TaskController {
+  // Create Task
   async createTask(request, response) {
-    try {
-      const query = `
+    const query = `
       INSERT INTO tasks (task_name, task_description, status)
       VALUES (?, ?, ?)
     `;
-
-      const task = await proccessBody(request);
-      const results = await queryDatabase(connection, query, [
-        task.name,
-        task.desc,
-        task.status,
-      ]);
-      setCorsHeaders(response);
-      response.statusCode = 201;
-      response.end(JSON.stringify({ id: results.insertId }));
-    } catch (err) {
-      sendServerError(response, err);
-    }
+    const task = await proccessBody(request);
+    const results = await queryDatabase(connection, query, [
+      task.name,
+      task.desc,
+      task.status,
+    ]);
+    response.statusCode = 201;
+    response.end(JSON.stringify({ id: results.insertId }));
   }
 
   // Fetches All Tasks from DB
   async getTasks(request, response) {
-    try {
-      const query = "select * from tasks";
-
-      const tasks = await queryDatabase(connection, query);
-      setCorsHeaders(response);
-      response.statusCode = 200;
-      response.end(JSON.stringify(tasks));
-    } catch (err) {
-      sendServerError(response, err);
-    }
+    const query = "select * from tasks";
+    const tasks = await queryDatabase(connection, query);
+    response.statusCode = 200;
+    response.end(JSON.stringify(tasks));
   }
 
   // Edit Task
   async editTask(request, response) {
-    try {
-      const task = await proccessBody(request);
+    const task = await proccessBody(request);
+    const query =
+      "UPDATE tasks SET task_name = ?, task_description = ?, status = ? WHERE task_id = ?";
 
-      setCorsHeaders(response);
-    } catch (err) {
-      sendServerError(response, err);
-    }
+    await queryDatabase(connection, query, [
+      task.name,
+      task.desc,
+      task.status,
+      task.id,
+    ]);
+
+    response.statusCode = 200;
+    response.end(JSON.stringify({ message: "Task updated successfully" }));
   }
 
   // Delete Task
   async deleteTask(request, response) {
-    try {
-      const query = "DELETE FROM tasks WHERE task_id = ?";
-      const task = await proccessBody(request);
-      queryDatabase(connection, query, [task.id]);
+    const query = "DELETE FROM tasks WHERE task_id = ?";
+    const task = await proccessBody(request);
+    await queryDatabase(connection, query, [task.id]);
 
-      setCorsHeaders(response);
-      response.statusCode = 204;
-      response.end();
-    } catch (err) {
-      sendServerError(response, err);
-    }
+    response.statusCode = 204;
+    response.end();
   }
 }
