@@ -1,14 +1,15 @@
 // dotenv Import
 
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config({ path: "./server/.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// mysql Module Import
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 import mysql from "mysql";
-
-// Make Database Connection
 
 export const connection = mysql.createPool({
   host: process.env.DATABASE_HOST,

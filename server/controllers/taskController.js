@@ -25,6 +25,7 @@ export class TaskController {
   async getTasks(request, response) {
     const query = "select * from tasks";
     const tasks = await queryDatabase(connection, query);
+    console.log(tasks);
     response.statusCode = 200;
     response.end(JSON.stringify(tasks));
   }
